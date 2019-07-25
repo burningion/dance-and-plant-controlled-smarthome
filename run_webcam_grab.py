@@ -26,6 +26,10 @@ def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
 
 
+dabs = []
+tposes = []
+other = []
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='tf-pose-estimation realtime webcam')
     parser.add_argument('--camera', type=int, default=0)
@@ -63,25 +67,15 @@ if __name__ == '__main__':
         infer = []
         for human in humans:
             hummie = []
-            for i in range(25): 
+            # we're running on the COCO dataset
+            # https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/output.md#pose-output-format-coco
+            for i in range(18): 
                 if i in human.body_parts.keys(): 
                     hummie.append(np.array([human.body_parts[i].x, human.body_parts[i].y], dtype=np.float32)) 
                 else: 
                     hummie.append(np.array([0.0, 0.0], dtype=np.float32))
             infer.append(hummie)
         
-        if len(infer) > 0:
-            #logger.debug("infer greater than zero")
-            num = len(infer)
-            infer = np.array(infer, dtype=np.float32)
-            infer = infer.reshape(num, 50)
-            #logger.debug(infer)
-            output = tposer.predict_classes(np.array(infer, dtype=np.float32))
-            for j in output:
-                if j == 1:
-                    print("dab detected")
-                elif j == 2:
-                    print("tpose detected")
         
         image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
 
@@ -92,8 +86,27 @@ if __name__ == '__main__':
                     (0, 255, 0), 2)
         cv2.imshow('tf-pose-estimation result', image)
         fps_time = time.time()
-        if cv2.waitKey(1) == 27:
+
+        # check for iput
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
             break
-        #logger.debug('finished+')
+        elif key == ord("b"):
+            print("Dab: " + str(infer[0]))
+            dabs.append(infer[0])
+        elif key == ord("m"):
+            print("TPose: " + str(infer[0]))
+            tposes.append(infer[0])
+        elif key == ord("/"):
+            print("Other: " + str(infer[0]))
+            other.append(infer[0])
+                
+    dabs = np.asarray(dabs)
+    tposes = np.asarray(tposes)
+    other = np.asarray(other)
+
+    np.save('COCOdabs.npy', dabs)
+    np.save('COCOtposes.npy', tposes)
+    np.save('COCOother.npy', other)
 
     cv2.destroyAllWindows()
