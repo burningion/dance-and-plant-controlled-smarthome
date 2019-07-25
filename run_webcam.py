@@ -63,7 +63,7 @@ if __name__ == '__main__':
         infer = []
         for human in humans:
             hummie = []
-            for i in range(25): 
+            for i in range(18): 
                 if i in human.body_parts.keys(): 
                     hummie.append(np.array([human.body_parts[i].x, human.body_parts[i].y], dtype=np.float32)) 
                 else: 
@@ -74,7 +74,7 @@ if __name__ == '__main__':
             #logger.debug("infer greater than zero")
             num = len(infer)
             infer = np.array(infer, dtype=np.float32)
-            infer = infer.reshape(num, 50)
+            infer = infer.reshape(num, 36)
             #logger.debug(infer)
             output = tposer.predict_classes(np.array(infer, dtype=np.float32))
             for j in output:
