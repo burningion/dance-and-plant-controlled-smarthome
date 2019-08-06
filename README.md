@@ -2,6 +2,8 @@
 
 My smarthome controlled via sweet dance moves and plants
 
+![Supplies needed for project](https://github.com/burningion/dance-and-plant-controlled-smarthome/raw/master/images/supplies.jpg)
+
 Runs on the NVIDIA Jetson Nano, a C920 webcam, and a Z-Wave USB stick.
 
 It uses [tf-pose-estimation](https://github.com/ildoonet/tf-pose-estimation) for better performance and easier configuration on the Jetson Nano.
