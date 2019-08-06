@@ -2,16 +2,21 @@
 
 My smarthome controlled via sweet dance moves and plants
 
-Runs on the NVIDIA Jetson Nano and a Z-Wave USB stick.
+Runs on the NVIDIA Jetson Nano, a C920 webcam, and a Z-Wave USB stick.
 
-Uses [tf-pose-estimation](https://github.com/ildoonet/tf-pose-estimation) for better performance and easier configuration on the Jetson Nano.
+It uses [tf-pose-estimation](https://github.com/ildoonet/tf-pose-estimation) for better performance and easier configuration on the Jetson Nano.
 
 
-Specifically, to get ~5FPS on the Jetson Nano, I'm running:
+Specifically, to get ~4.5FPS on the Jetson Nano, I'm running:
 
 ```bash
-$ python3 run_webcam_grab.py --model=mobilenet_v2_small --resize=368x368 --camera=0 --tensorrt=True
+$ sudo nvpmodel -m 0
+$ python3 run_webcam_grab.py --model=mobilenet_thin --resize=368x368 --camera=0 --tensorrt=True
 ```
 
-It takes _a while_ to spin up. (On the order of minutes.) I haven't yet found the bottleneck, and it's not too much of a worry just yet.
+The `nvpmodel -m 0` sets the Jetson Nano into it's highest performance, most power drawing mode. I recommend having a 5v power supply to run this, along with a jumper to short the part on the Nano to switch from taking in power from USB.
+
+The `run_webcam_grab.py` takes a while to spin up. Just be patient, and eventually, you'll see the webcam and be able to test it out!
+
+
 
